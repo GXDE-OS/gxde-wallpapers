@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GXDE OS 壁纸站</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e6e6e6;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        header {
+            background: rgba(10, 15, 35, 0.8);
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .logo-icon {
+            font-size: 2.8rem;
+            color: #4ecca3;
+        }
+        
+        h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #4ecca3, #2e8a6d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #8a8a8a;
+            margin-bottom: 1.5rem;
+        }
+        
+        .search-container {
+            max-width: 600px;
+            margin: 1.5rem auto;
+            display: flex;
+            position: relative;
+        }
+        
+        #search {
+            flex: 1;
+            padding: 15px 25px;
+            border: 2px solid rgba(78, 204, 163, 0.3);
+            border-radius: 50px;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.07);
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+        
+        #search:focus {
+            outline: none;
+            border-color: #4ecca3;
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.2);
+        }
+        
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            padding: 10px 20px;
+            background: #4ecca3;
+            color: #1a1a2e;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .search-btn:hover {
+            background: #38b592;
+            transform: scale(1.05);
+        }
+        
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #e6e6e6;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .filter-btn.active, .filter-btn:hover {
+            background: #4ecca3;
+            color: #1a1a2e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(78, 204, 163, 0.3);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .wallpapers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .wallpaper-card {
+            background: rgba(30, 35, 65, 0.7);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .wallpaper-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .wallpaper-img-container {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .wallpaper-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s;
+        }
+        
+        .wallpaper-card:hover .wallpaper-img {
+            transform: scale(1.1);
+        }
+        
+        .wallpaper-info {
+            padding: 1.2rem;
+        }
+        
+        .wallpaper-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #f0f0f0;
+        }
+        
+        .wallpaper-category {
+            font-size: 0.9rem;
+            color: #8a8a8a;
+            margin-bottom: 1rem;
+        }
+        
+        .wallpaper-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .preview-btn, .download-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        
+        .preview-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: #e6e6e6;
+        }
+        
+        .download-btn {
+            background: #4ecca3;
+            color: #1a1a2e;
+            font-weight: 500;
+        }
+        
+        .preview-btn:hover, .download-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            overflow: auto;
+            padding: 60px 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .modal.show {
+            opacity: 1;
+        }
+        
+        .modal-content {
+            display: block;
+            margin: 0 auto;
+            max-width: 90%;
+            max-height: 70vh;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(78, 204, 163, 0.4);
+            animation: zoomIn 0.3s ease-out;
+        }
+        
+        @keyframes zoomIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 25px;
+            right: 35px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-btn:hover {
+            color: #4ecca3;
+            transform: scale(1.2);
+        }
+        
+        .modal-info {
+            text-align: center;
+            color: white;
+            margin-top: 25px;
+            padding: 0 20px;
+        }
+        
+        .modal-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #4ecca3;
+        }
+        
+        .modal-category {
+            font-size: 1.1rem;
+            color: #8a8a8a;
+            margin-bottom: 25px;
+        }
+        
+        .modal-download {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: #4ecca3;
+            color: #1a1a2e;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(78, 204, 163, 0.3);
+        }
+        
+        .modal-download:hover {
+            background: #38b592;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(78, 204, 163, 0.4);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 5rem;
+            background: rgba(10, 15, 35, 0.8);
+            color: #8a8a8a;
+        }
+        
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+        
+        .footer-link {
+            color: #4ecca3;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-link:hover {
+            color: #38b592;
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .wallpapers-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1.5rem;
+            }
+            
+            .wallpaper-img-container {
+                height: 180px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .wallpapers-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters {
+                gap: 0.5rem;
+            }
+            
+            .filter-btn {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .logo-icon {
+                font-size: 2.2rem;
+            }
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.3rem;
+            color: #4ecca3;
+            grid-column: 1 / -1;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4ecca3;
+            color: #1a1a2e;
+            padding: 15px 30px;
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-weight: 500;
+        }
+        
+        .toast.show {
+            opacity: 1;
+        }
+        
+        .stats {
+            text-align: center;
+            margin: 1rem 0 2rem;
+            color: #8a8a8a;
+            font-size: 1.1rem;
+        }
+        
+        .highlight {
+            color: #4ecca3;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-image logo-icon"></i>
+            <h1>GXDE OS 壁纸站</h1>
+        </div>
+        <p class="subtitle">发现并下载精美高清壁纸，为您的设备增添个性色彩</p>
+        <div class="search-container">
+            <input type="text" id="search" placeholder="搜索壁纸...">
+            <button class="search-btn"><i class="fas fa-search"></i> 搜索</button>
+        </div>
+    </header>
+
+    <div class="filters">
+        <button class="filter-btn active" data-filter="all">全部壁纸</button>
+        <button class="filter-btn" data-filter="deepin">GXDE 壁纸</button>
+        <button class="filter-btn" data-filter="deepin-community">社区壁纸</button>
+    </div>
+
+    <div class="container">
+        <div class="stats">找到 <span class="highlight" id="wallpaper-count">0</span> 张壁纸</div>
+        <div class="wallpapers-grid" id="wallpapers-grid">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i> 正在加载壁纸...
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="preview-modal">
+        <span class="close-btn" id="close-modal">&times;</span>
+        <img class="modal-content" id="modal-img">
+        <div class="modal-info">
+            <h2 class="modal-title" id="modal-title"></h2>
+            <p class="modal-category" id="modal-category"></p>
+            <a href="#" class="modal-download" id="modal-download"><i class="fas fa-download"></i> 下载壁纸</a>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">壁纸下载开始...</div>
+
+    <footer>
+        <div class="footer-content">
+            <p>©2025 GXDE OS | 所有壁纸版权归原作者所有</p>
+            <div class="footer-links">
+                <a href="https://www.gxde.top" class="footer-link">官网</a>
+            </div>
+            <p>本网站仅提供壁纸预览服务，下载的壁纸请勿用于商业用途</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const wallpapersGrid = document.getElementById('wallpapers-grid');
+            const previewModal = document.getElementById('preview-modal');
+            const modalImg = document.getElementById('modal-img');
+            const modalTitle = document.getElementById('modal-title');
+            const modalCategory = document.getElementById('modal-category');
+            const modalDownload = document.getElementById('modal-download');
+            const closeModal = document.getElementById('close-modal');
+            const searchInput = document.getElementById('search');
+            const searchBtn = document.querySelector('.search-btn');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const toast = document.getElementById('toast');
+            const wallpaperCount = document.getElementById('wallpaper-count');
+            
+            let wallpapers = [];
+            let filteredWallpapers = [];
+            
+            // 从 /wallpapers.json 获取壁纸列表
+            async function fetchWallpapers() {
+                try {
+                    const response = await fetch('/wallpapers.json');
+                    if (!response.ok) {
+                        throw new Error('网络响应不正常');
+                    }
+                    return await response.json();
+                } catch (error) {
+                    console.error('无法获取壁纸列表:', error);
+                }
+            }
+            
+            // 显示壁纸列表
+            function displayWallpapers(wallpapersArray) {
+                wallpapersGrid.innerHTML = '';
+                wallpaperCount.textContent = wallpapersArray.length;
+                
+                if (wallpapersArray.length === 0) {
+                    wallpapersGrid.innerHTML = '<div class="loading">没有找到匹配的壁纸</div>';
+                    return;
+                }
+                
+                wallpapersArray.forEach(wallpaper => {
+                    const filename = wallpaper.split('/').pop();
+                    const name = filename.split('.').slice(0, -1).join('.');
+                    const formattedName = name.replace(/_/g, ' ').replace(/by/g, 'by ');
+                    const category = wallpaper.includes('deepin-community') ? '社区壁纸' : 'GXDE 壁纸';
+                    
+                    const card = document.createElement('div');
+                    card.className = 'wallpaper-card';
+                    card.dataset.category = wallpaper.includes('deepin-community') ? 'deepin-community' : 'deepin';
+                    
+                    card.innerHTML = `
+                        <div class="wallpaper-img-container">
+                            <img src="${wallpaper}" alt="${formattedName}" class="wallpaper-img" loading="lazy">
+                        </div>
+                        <div class="wallpaper-info">
+                            <h3 class="wallpaper-title">${formattedName}</h3>
+                            <p class="wallpaper-category">${category}</p>
+                            <div class="wallpaper-actions">
+                                <button class="preview-btn"><i class="fas fa-eye"></i> 预览</button>
+                                <button class="download-btn" data-url="${wallpaper}"><i class="fas fa-download"></i> 下载</button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    wallpapersGrid.appendChild(card);
+                    
+                    // 添加预览事件
+                    const img = card.querySelector('.wallpaper-img');
+                    img.addEventListener('click', () => {
+                        openModal(wallpaper, formattedName, category);
+                    });
+                    
+                    // 添加预览按钮事件
+                    const previewBtn = card.querySelector('.preview-btn');
+                    previewBtn.addEventListener('click', () => {
+                        openModal(wallpaper, formattedName, category);
+                    });
+                    
+                    // 添加下载按钮事件
+                    const downloadBtn = card.querySelector('.download-btn');
+                    downloadBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        downloadWallpaper(wallpaper);
+                    });
+                });
+            }
+            
+            // 打开预览模态框
+            function openModal(url, title, category) {
+                modalImg.src = url;
+                modalTitle.textContent = title;
+                modalCategory.textContent = category;
+                modalDownload.href = url;
+                modalDownload.download = url.split('/').pop();
+                previewModal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                setTimeout(() => {
+                    previewModal.classList.add('show');
+                }, 10);
+            }
+            
+            // 关闭预览模态框
+            closeModal.addEventListener('click', () => {
+                previewModal.classList.remove('show');
+                setTimeout(() => {
+                    previewModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }, 300);
+            });
+            
+            // 点击模态框外部关闭
+            previewModal.addEventListener('click', (e) => {
+                if (e.target === previewModal) {
+                    closeModal.click();
+                }
+            });
+            
+            // 下载壁纸
+            function downloadWallpaper(url) {
+                showToast('开始下载壁纸...');
+                
+                // 在实际应用中，这里应该是一个真实的下载链接
+                // 这里我们模拟下载行为
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = url.split('/').pop();
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+            
+            // 显示 toast 提示
+            function showToast(message) {
+                toast.textContent = message;
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+            
+            // 搜索功能
+            function handleSearch() {
+                const searchTerm = searchInput.value.toLowerCase();
+                
+                filteredWallpapers = wallpapers.filter(wallpaper => {
+                    const filename = wallpaper.split('/').pop();
+                    const name = filename.split('.').slice(0, -1).join('.').toLowerCase();
+                    return name.includes(searchTerm);
+                });
+                
+                displayWallpapers(filteredWallpapers);
+            }
+            
+            searchBtn.addEventListener('click', handleSearch);
+            searchInput.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') {
+                    handleSearch();
+                }
+            });
+            
+            // 筛选功能
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // 更新活跃按钮
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    const filter = btn.dataset.filter;
+                    
+                    if (filter === 'all') {
+                        filteredWallpapers = [...wallpapers];
+                    } else {
+                        filteredWallpapers = wallpapers.filter(wallpaper => {
+                            return filter === 'deepin' ? 
+                                !wallpaper.includes('deepin-community') : 
+                                wallpaper.includes('deepin-community');
+                        });
+                    }
+                    
+                    // 应用搜索筛选
+                    const searchTerm = searchInput.value.toLowerCase();
+                    if (searchTerm) {
+                        filteredWallpapers = filteredWallpapers.filter(wallpaper => {
+                            const filename = wallpaper.split('/').pop();
+                            const name = filename.split('.').slice(0, -1).join('.').toLowerCase();
+                            return name.includes(searchTerm);
+                        });
+                    }
+                    
+                    displayWallpapers(filteredWallpapers);
+                });
+            });
+            
+            // 初始化
+            fetchWallpapers().then(data => {
+                wallpapers = data;
+                filteredWallpapers = [...wallpapers];
+                displayWallpapers(filteredWallpapers);
+            });
+        });
+    </script>
+</body>
+</html>
