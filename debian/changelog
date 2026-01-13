@@ -1,12 +1,13 @@
-gxde-wallpapers (1.7.37) UNRELEASED; urgency=medium
+gxde-wallpapers (1.7.38) UNRELEASED; urgency=medium
 
   * chore: adjust default wallpaper to 15.6
   * 修改部分壁纸
   * 设置为与 deepin-wallpapers、deepin-wallpapers-nonfree 冲突
   * 调整默认壁纸
   * 调整壁纸 sleep
+  * 更新壁纸
 
- -- gfdgd_xi <3025613752@qq.com>  Thu, 02 Oct 2025 09:58:30 +0800
+ -- gfdgd_xi <3025613752@qq.com>  Tue, 13 Jan 2026 22:43:52 +0800
 
 gxde-wallpapers (1.7) stable; urgency=low
 
