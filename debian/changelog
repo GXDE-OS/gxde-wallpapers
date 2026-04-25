@@ -1,4 +1,4 @@
-gxde-wallpapers (1.7.43) UNRELEASED; urgency=medium
+gxde-wallpapers (1.7.44) UNRELEASED; urgency=medium
 
   * chore: adjust default wallpaper to 15.6
   * 修改部分壁纸
@@ -8,8 +8,9 @@ gxde-wallpapers (1.7.43) UNRELEASED; urgency=medium
   * 更新壁纸
   * 调整壁纸 TheSourceOfGXDE
   * 添加壁纸 TheSourceOfGXDEDark
+  * 修改 png 为 jpg 以减少 deb 体积
 
- -- gfdgd_xi <3025613752@qq.com>  Thu, 23 Apr 2026 22:54:20 +0800
+ -- gfdgd_xi <3025613752@qq.com>  Sat, 25 Apr 2026 22:13:20 +0800
 
 gxde-wallpapers (1.7) stable; urgency=low
 
