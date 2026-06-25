@@ -15,7 +15,7 @@ Replaces: debian-dde-wallpapers, deepin-wallpapers, deepin-wallpapers-nonfree
 Conflicts: debian-dde-wallpapers, deepin-wallpapers, deepin-wallpapers-nonfree
 Recommends: gxde-community-wallpapers
 Breaks: deepin-desktop-base (<< 2017.11.2)
-Description: dde wallpapers
+Description: gxde wallpapers
  Default wallpapers for gxde
 
 Package: gxde-community-wallpapers
@@ -26,3 +26,12 @@ Replaces: debian-dde-wallpapers, deepin-wallpapers, deepin-wallpapers-nonfree
 Breaks: gxde-wallpapers(<< 1.7.5)
 Description: community wallpapers
  Community wallpapers for gxde
+
+Package: gxde-solidwallpapers
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Conflicts: debian-dde-wallpapers, deepin-wallpapers, deepin-wallpapers-nonfree
+Replaces: debian-dde-wallpapers, deepin-wallpapers, deepin-wallpapers-nonfree
+Breaks: gxde-wallpapers(<< 1.7.5)
+Description: solid wallpapers
+ Solid wallpapers for gxde
