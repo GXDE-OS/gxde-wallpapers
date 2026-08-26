@@ -1,4 +1,4 @@
-gxde-wallpapers (1.7.48) UNRELEASED; urgency=medium
+gxde-wallpapers (1.7.49) UNRELEASED; urgency=medium
 
   * chore: adjust default wallpaper to 15.6
   * 修改部分壁纸
@@ -12,7 +12,7 @@ gxde-wallpapers (1.7.48) UNRELEASED; urgency=medium
   * 新增纯色壁纸
   * 补充壁纸海底古城、sleep
 
- -- gfdgd_xi <3025613752@qq.com>  Wed, 26 Aug 2026 12:48:32 +0800
+ -- gfdgd_xi <3025613752@qq.com>  Wed, 26 Aug 2026 12:49:45 +0800
 
 gxde-wallpapers (1.7) stable; urgency=low
 
