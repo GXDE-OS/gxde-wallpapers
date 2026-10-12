@@ -1,0 +1,61 @@
+# Maintainer: CharOfString <root@charofstring.cc>
+pkgbase=gxde-wallpapers-git
+pkgname=('gxde-wallpapers-git' 'gxde-community-wallpapers-git' 'gxde-solidwallpapers-git')
+pkgver=1.7.49
+pkgrel=1
+pkgdesc='GXDE wallpapers'
+arch=('any')
+url="https://github.com/GXDE-OS/gxde-wallpapers"
+license=('GPL-3.0-or-later' 'CC-BY-3.0' 'CC-BY-4.0')
+# 构建时用 gxde-api 的 image-blur 生成模糊背景缓存 ・ The build uses gxde-api's image-blur to pre-render blurred backgrounds.
+makedepends=('git' 'gxde-api-git')
+source=()
+sha512sums=()
+
+# 直接使用 PKGBUILD 所在的 git 仓库作为源码 ・ Build from the git checkout this PKGBUILD lives in.
+_srcroot() {
+  git -C "$startdir" rev-parse --show-toplevel
+}
+
+build() {
+  make -C "$(_srcroot)"
+}
+
+# 与 debian/*.install 相同 ・ Same as debian/*.install.
+package_gxde-wallpapers-git() {
+  optdepends=('gxde-community-wallpapers-git: community wallpapers'
+              'gxde-solidwallpapers-git: solid color wallpapers')
+  # 与 Debian 相同，只与 deepin-wallpapers 冲突而不提供它（拆分出的兄弟包也与之冲突）
+  # Like on Debian, conflict with deepin-wallpapers without providing it (the
+  # sibling split packages conflict with it too).
+  provides=('gxde-wallpapers')
+  conflicts=('gxde-wallpapers' 'deepin-wallpapers')
+
+  install -d "$pkgdir/usr/share/wallpapers" "$pkgdir/var/cache"
+  cp -r --no-preserve=ownership "$(_srcroot)/deepin" "$pkgdir/usr/share/wallpapers/"
+  cp -r --no-preserve=ownership "$(_srcroot)/image-blur" "$pkgdir/var/cache/"
+
+  # Debian 的 postinst 用 update-alternatives 设置默认背景，这里直接链接
+  # Debian's postinst sets the default background with update-alternatives,
+  # link it directly instead.
+  install -d "$pkgdir/usr/share/backgrounds"
+  ln -s ../wallpapers/deepin/desktop.jpg "$pkgdir/usr/share/backgrounds/default_background.jpg"
+}
+
+package_gxde-community-wallpapers-git() {
+  pkgdesc='GXDE community wallpapers'
+  provides=('gxde-community-wallpapers')
+  conflicts=('gxde-community-wallpapers' 'deepin-wallpapers')
+
+  install -d "$pkgdir/usr/share/wallpapers/deepin"
+  cp -r --no-preserve=ownership "$(_srcroot)"/deepin-community/* "$pkgdir/usr/share/wallpapers/deepin/"
+}
+
+package_gxde-solidwallpapers-git() {
+  pkgdesc='GXDE solid color wallpapers'
+  provides=('gxde-solidwallpapers')
+  conflicts=('gxde-solidwallpapers' 'deepin-wallpapers')
+
+  install -d "$pkgdir/usr/share/wallpapers/deepin"
+  cp -r --no-preserve=ownership "$(_srcroot)"/deepin-solidwallpapers/* "$pkgdir/usr/share/wallpapers/deepin/"
+}
